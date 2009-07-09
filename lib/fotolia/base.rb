@@ -1,10 +1,15 @@
 module Fotolia
+  #
+  # See Fotolia::Base#new.
+  #
   def self.new(*params)
     Fotolia::Base.new(*params)
   end
 
   class CommunicationError < StandardError; end
   class ApiKeyRequiredError < StandardError; end
+  class UserLoginError < StandardError; end
+  class LoginRequiredError < StandardError; end
 
   class Base
     DEFAULT_API_URI = 'http://api.fotolia.com/Xmlrpc/rpc'
@@ -13,7 +18,15 @@ module Fotolia
     attr_reader :api_key
     attr_reader :language
     attr_reader :api_uri
+    attr_reader :session_id
+    attr_reader :logged_in_user
 
+    #
+    # ==options hash
+    # :api_key <String>:: Your Fotolia API key (an exception is raised if not included)
+    # :language <Fotolia::Language>:: The language the client should submit to the API if applicable. Defaults to Fotolia::Language.new(DEFAULT_LANGUAGE).
+    # :api_uri <String>:: The URI of the Fotolia API. Defaults to DEFAULT_API_URI.
+    #
     def initialize(options = {})
       @api_key = options[:api_key]
       @language = options[:language] || Fotolia::Language.new(DEFAULT_LANGUAGE)
@@ -22,26 +35,69 @@ module Fotolia
       raise ApiKeyRequiredError unless(@api_key)
     end
 
+    #
+    # Returns a Fotolia::Colors object.
+    #
+    # ==Example
+    # f = Fotolia.new(:api_key => YOUR_API_KEY)
+    # f.colors.find_all
+    #
     def colors
       @colors ||= Fotolia::Colors.new(self)
     end
 
+    #
+    # Returns a Fotolia::ConceptualCategories object.
+    #
+    # ==Example
+    # f = Fotolia.new(:api_key => YOUR_API_KEY)
+    # f.conceptual_categories.find
+    #
     def conceptual_categories
       @conceptual_categories ||= Fotolia::ConceptualCategories.new(self)
     end
 
+    #
+    # Returns a Fotolia::RepresentativeCategories object.
+    #
+    # ==Example
+    # f = Fotolia.new(:api_key => YOUR_API_KEY)
+    # f.representative_categories.find
+    #
     def representative_categories
       @representative_categories ||= Fotolia::RepresentativeCategories.new(self)
     end
 
+    #
+    # Returns a Fotolia::Countries object.
+    #
+    # ==Example
+    # f = Fotolia.new(:api_key => YOUR_API_KEY)
+    # f.countries.find_all
+    #
     def countries
       @countries ||= Fotolia::Countries.new(self)
     end
 
+    #
+    # Returns a Fotolia::Galleries object.
+    #
+    # ==Example
+    # f = Fotolia.new(:api_key => YOUR_API_KEY)
+    # f.galleries.find_all
+    #
     def galleries
       @galleries ||= Fotolia::Galeries.new(self)
     end
-    
+
+    #
+    # Returns a Fotolia::Tags object.
+    #
+    # ==Example
+    # f = Fotolia.new(:api_key => YOUR_API_KEY)
+    # f.tags.most_used
+    # f.tags.most_searched
+    #
     def tags
       @tags ||= Fotolia::Tags.new(self)
     end
@@ -74,10 +130,57 @@ module Fotolia
     # :order <String>:: Order the result set. Valid values are 'relevance', 'price_1', 'creation', 'nb_views' and 'nb_downloads'. Defaults to 'relevance'.
     # :thumbnail_size <Fixnum>:: The size of the thumbnail images included in the result set. Valid values are 30, 110 and 400. Defaults to 110. Thumbs in 400px size are watermarked by Fotolia.
     #
+    # ==returns
+    # Fotolia::SearchResultSet
+    #
     def search(options)
       Fotolia::SearchResultSet.new(self, options)
     end
 
+    #
+    # Start an user authenticated session which is needed for some functions,
+    # especially user related ones.
+    #
+    # Won't work in Fotolia's Partner API! Business and Reseller API are limited
+    # to login the user the API key belongs to. Only Developer API allows login
+    # of all users.
+    #
+    def login(login, pass)
+      @logged_in_user = Fotolia::User.new(self, login, pass)
+      res = self.remote_call('loginUser', login, pass)
+      raise UserLoginError unless(res['session_id'])
+      @session_id = res['session_id']
+    end
+
+    #
+    # Ends an user authenticated session.
+    #
+    def logout
+      return false unless self.logged_in?
+      self.remote_call('logoutUser', self.session_id)
+      @session_id = nil
+      @logged_in_user = nil
+      true
+    end
+
+    #
+    # Returns true if there is a valid user authenticated session.
+    #
+    def logged_in?
+      !@session_id.nil?
+    end
+
+    # 
+    # The number of media objects in Fotolia's DB.
+    #
+    def count_media
+      general_data['nb_media']
+    end
+
+    #
+    # Does an API call and returns the response. Useful if you like to call
+    # methods not implemented by this library.
+    #
     def remote_call(method, *args)
       begin
         client = XMLRPC::Client.new2(@api_uri)
@@ -85,6 +188,12 @@ module Fotolia
       rescue XMLRPC::FaultException => e
         raise Fotolia::CommunicationError, e.message
       end
+    end
+
+    protected
+
+    def general_data
+      @general_data ||= self.remote_call('getData')
     end
   end
 end

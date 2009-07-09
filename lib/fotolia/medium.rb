@@ -181,12 +181,25 @@ module Fotolia
       :vector == self.media_type
     end
 
-    def similar_media(options)
+    def similar_media(options = {})
       @fotolia.search(options.merge({:similia_id => self.id}))
     end
 
     # TODO:: implement function
+    #
+    # Does not work in Partner and Developer API.
+    #
     def buy_and_save_as(license, file_path)
+    end
+
+    # TODO:: implement function
+    def add_to_user_gallery(gallery = nil)
+      raise Fotolia::LoginRequiredError unless @fotolia.logged_in?
+    end
+
+    # TODO:: implement function
+    def remove_from_user_gallery(gallery = nil)
+      raise Fotolia::LoginRequiredError unless @fotolia.logged_in?
     end
   end
 end

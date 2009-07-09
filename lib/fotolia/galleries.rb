@@ -7,7 +7,12 @@ module Fotolia
     def find_all
       rsp = @fotolia.remote_call('getGalleries', @fotolia.language.id)
 
-      rsp.collect{|g| Fotolia::Gallery.new(g)}
+      rsp.collect{|g| Fotolia::Gallery.new(@fotolia, g)}
+    end
+
+    # TODO:: implement function
+    def create(name)
+      raise Fotolia::LoginRequiredError unless @fotolia.logged_in?
     end
   end
 end
