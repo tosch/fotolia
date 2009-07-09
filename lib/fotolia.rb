@@ -16,5 +16,7 @@ require 'xmlrpc/client'
   'galleries',
   'medium',
   'tag',
-  'tags'
+  'tags',
+  'search_result_set',
+  'user'
 ].each {|file| require File.join(File.dirname(__FILE__), 'fotolia', file)}
