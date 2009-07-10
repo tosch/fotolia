@@ -16,20 +16,40 @@ module Fotolia
     end
 
     #
+    # Returns the media in this gallery.
+    #
     # ==options hash
     # See Fotolia::Base#search
     #
     # ==Returns
     # Fotolia::SearchResultSet
     #
-    def posts(options = {})
+    def media(options = {})
       @fotolia.search(options.merge({:gallery => self}))
     end
 
-    # TODO:: implement function
+    #
+    # Deletes the gallery.
+    #
+    # Requires an authenticated session. The logged in user has to be the owner
+    # of the gallery.
+    #
+    # Not available in Partner API.
+    #
     def delete
       raise Fotolia::LoginRequiredError unless @fotolia.logged_in?
+      @fotolia.remote_call('deleteUserGallery', @fotolia.session_id, self.id)
     end
 
+    #
+    # Add a medium to this gallery. The gallery has to be owned by the logged in
+    # user, so this methods requires an authenticated session. See
+    # Fotolia::Base#login.
+    #
+    # Not available in Partner API.
+    #
+    def << (medium)
+      medium.add_to_user_gallery(self)
+    end
   end
 end

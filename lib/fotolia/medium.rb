@@ -192,14 +192,46 @@ module Fotolia
     def buy_and_save_as(license, file_path)
     end
 
-    # TODO:: implement function
+    #
+    # Adds this medium to the logged in user's lightbox or one of his galleries.
+    #
+    # Requires an authenticated session. Call Fotolia::Base#login first!
+    #
+    # ==Parameters
+    # gallery:: A Fotolia::Gallery object or nil. If the latter, the user's lightbox is used.
+    #
+    # Does not work in Partner API.
+    #
     def add_to_user_gallery(gallery = nil)
       raise Fotolia::LoginRequiredError unless @fotolia.logged_in?
+
+      if(gallery)
+        # add to gallery
+        @fotolia.remote_call('addToUserGallery', @fotolia.session_id, self.id, gallery.id)
+      else
+        # add to lightbox
+        @fotolia.remote_call('addToUserGallery', @fotolia.session_id, self.id)
+      end
     end
 
-    # TODO:: implement function
+    #
+    # Removes this medium from the logged in user's gallery or lightbox.
+    #
+    # Requires an authenticated session. Call Fotolia::Base#login first!
+    #
+    # ==Parameters
+    # gallery:: A Fotolia::Gallery object or nil. If the latter, the user's lightbox is used.
+    #
+    # Does not work in Partner API.
+    #
     def remove_from_user_gallery(gallery = nil)
       raise Fotolia::LoginRequiredError unless @fotolia.logged_in?
+
+      if(gallery)
+        @fotolia.remote_call('removeFromUserGallery', @fotolia.session_id, self.id, gallery.id)
+      else
+        @fotolia.remote_call('removeFromUserGallery', @fotolia.session_id, self.id)
+      end
     end
   end
 end
