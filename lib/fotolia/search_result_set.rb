@@ -132,9 +132,9 @@ module Fotolia
       remote_opts['language_id'] = @options[:language].id
       remote_opts['words'] = @options[:words] if(@options[:words])
       remote_opts['creator_id'] = @options[:creator_id] if(@options[:creator_id])
-      remote_opts['cat1_id'] = @options[:representative_category].id if(@options[:representative_category].kind_of?(Fotolia::Category))
-      remote_opts['cat2_id'] = @options[:conceptual_category].id if(@options[:conceptual_category].kind_of?(Fotolia::Category))
-      remote_opts['gallery_id'] = @options[:gallery].id if(@options[:gallery].kind_of?(Fotolia::Galery))
+      remote_opts['cat1_id'] = @options[:representative_category].id if(@options[:representative_category] && @options[:representative_category].respond_to?(:id))
+      remote_opts['cat2_id'] = @options[:conceptual_category].id if(@options[:conceptual_category] && @options[:conceptual_category].respond_to?(:id))
+      remote_opts['gallery_id'] = @options[:gallery].id if(@options[:gallery].kind_of?(Fotolia::Gallery))
       remote_opts['color_name'] = @options[:color].name if(@options[:color].kind_of?(Fotolia::Color))
       remote_opts['country_id'] = @options[:country].id if(@options[:country].kind_of?(Fotolia::Country))
       remote_opts['media_id'] = @options[:media_id] if(@options[:media_id])
@@ -173,7 +173,7 @@ module Fotolia
 
       @media = Array.new
 
-      api_response.each{|k, v| @media << Fotolia::Medium.new(@fotolia, v) unless(k == 'nb_results')}
+      api_response.each{|k, v| @media << Fotolia::Medium.new(@fotolia, v) if(k =~ /^\d+$/)}
 
       @pages = Pages.new(@fotolia, @options, (@total.to_f / @per_page.to_f).ceil, self) unless(@pages)
 
