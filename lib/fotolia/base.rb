@@ -31,6 +31,7 @@ module Fotolia
       @api_key = options[:api_key]
       @language = options[:language] || Fotolia::Language.new(DEFAULT_LANGUAGE)
       @api_uri = options[:api_uri] || DEFAULT_API_URI
+      @xmlrpc_client = XMLRPC::Client.new2(@api_uri)
 
       raise ApiKeyRequiredError unless(@api_key)
     end
@@ -87,7 +88,7 @@ module Fotolia
     # f.galleries.find_all
     #
     def galleries
-      @galleries ||= Fotolia::Galeries.new(self)
+      @galleries ||= Fotolia::Galleries.new(self)
     end
 
     #
@@ -183,8 +184,7 @@ module Fotolia
     #
     def remote_call(method, *args)
       begin
-        client = XMLRPC::Client.new2(@api_uri)
-        client.call('xmlrpc.' + method.to_s, @api_key, *args)
+        @xmlrpc_client.call('xmlrpc.' + method.to_s, @api_key, *args)
       rescue XMLRPC::FaultException => e
         raise Fotolia::CommunicationError, e.message
       end
