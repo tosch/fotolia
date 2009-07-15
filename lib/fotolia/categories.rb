@@ -14,9 +14,9 @@ module Fotolia
       else
         # get cats from fotolia
         res = if(category && (category.kind_of?(String) || category.kind_of?(Fixnum)))
-          @fotolia.remote_call(@method, @fotolia.language.id, category.to_s)
+          @fotolia.remote_call(@method, @fotolia.language.id, category.to_i)
         elsif(category)
-          @fotolia.remote_call(@method, @fotolia.language.id, category.id)
+          @fotolia.remote_call(@method, @fotolia.language.id, category.id.to_i)
         else
           @fotolia.remote_call(@method, @fotolia.language.id)
         end
