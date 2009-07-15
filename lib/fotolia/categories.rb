@@ -13,7 +13,9 @@ module Fotolia
         @categories[k] # use cached categories
       else
         # get cats from fotolia
-        res = if(category)
+        res = if(category && (category.kind_of?(String) || category.kind_of?(Fixnum)))
+          @fotolia.remote_call(@method, @fotolia.language.id, category.to_s)
+        elsif(category)
           @fotolia.remote_call(@method, @fotolia.language.id, category.id)
         else
           @fotolia.remote_call(@method, @fotolia.language.id)
