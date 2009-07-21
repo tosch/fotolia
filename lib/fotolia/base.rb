@@ -190,6 +190,10 @@ module Fotolia
       end
     end
 
+    def inspect
+      "#<#{self.class} api_key=#{@api_key.inspect} language=#{@language.inspect} session_id=#{@session_id.inspect} logged_in_user=#{@logged_in_user.inspect}>"
+    end
+
     protected
 
     def general_data

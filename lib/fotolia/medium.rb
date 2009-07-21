@@ -78,9 +78,6 @@ module Fotolia
     MEDIA_TYPES = {1 => :photo, 2 => :illustration, 3 => :vector}
 
     attr_reader :id
-    attr_reader :title
-    attr_reader :creator_id
-    attr_reader :creator_name
     attr_reader :thumbnail
     attr_reader :licenses
     attr_reader :fotolia
@@ -88,15 +85,14 @@ module Fotolia
     def initialize(fotolia_client, attributes)
       @fotolia = fotolia_client
       @id = attributes['id'].to_i
-      @title = attributes['title']
-      @creator_id = attributes['creator_id']
-      @creator_name = attributes['creator_name']
-      @thumbnail = Thumbnail.new(attributes)
-      @nb_views = attributes['nb_views']
-      @nb_downloads = attributes['nb_downloads']
-      @keywords = [] unless(attributes['keywords'])
+      @title = attributes['title'] if(attributes['title'])
+      @creator_id = attributes['creator_id'] if(attributes['creator_id'])
+      @creator_name = attributes['creator_name'] if(attributes['creator_name'])
+      @thumbnail = Thumbnail.new(attributes) if(attributes['thumbnail_url'])
+      @nb_views = attributes['nb_views'] if(attributes['nb_views'])
+      @nb_downloads = attributes['nb_downloads'] if(attributes['nb_downloads'])
       @keywords = attributes['keywords'].split(',').collect{|k| k.strip} if(attributes['keywords'])
-      @licenses = attributes['licenses'].collect{|l| License.new(self, l)}
+      @licenses = attributes['licenses'].collect{|l| License.new(self, l)} if(attributes['licenses'])
     end
 
     def comp_image
@@ -167,6 +163,26 @@ module Fotolia
 
     def media_type
       MEDIA_TYPES[self.media_type_id] || :unknown
+    end
+
+    def title
+      @title ||= self.details['title']
+    end
+
+    def creator_id
+      @creator_id ||= self.details['creator_id']
+    end
+
+    def creator_name
+      @creator_name ||= self.details['creator_name']
+    end
+
+    def licenses
+      @licenses ||= self.details['licenses'].collect{|l| License.new(self, l)}
+    end
+
+    def thumbnail
+      @thumbnail ||= Thumbnail.new(self.details)
     end
 
     def is_photo?
