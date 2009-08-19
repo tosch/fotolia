@@ -27,6 +27,10 @@ require 'xmlrpc/client'
 # Monkey patch XMLRPC::Client as Fotolia returns application/xml as content type
 # instead of text/xml which XMLRPC expects
 #
+class XMLRPC::HTTPException < Exception #:nodoc:
+end
+class XMLRPC::HTTPAuthenticationException < Exception #:nodoc:
+end
 class XMLRPC::Client #:nodoc:
   private
 
@@ -77,9 +81,9 @@ class XMLRPC::Client #:nodoc:
 
     if resp.code == "401"
       # Authorization Required
-      raise "Authorization failed.\nHTTP-Error: #{resp.code} #{resp.message}"
+      raise XMLRPC::HTTPAuthenticationException, "Authorization failed.\nHTTP-Error: #{resp.code} #{resp.message}"
     elsif resp.code[0,1] != "2"
-      raise "HTTP-Error: #{resp.code} #{resp.message}"
+      raise XMLRPC::HTTPException, "HTTP-Error: #{resp.code} #{resp.message}"
     end
 
     ct = parse_content_type(resp["Content-Type"]).first
@@ -93,9 +97,9 @@ class XMLRPC::Client #:nodoc:
 
     expected = resp["Content-Length"] || "<unknown>"
     if data.nil? or data.size == 0
-      raise "Wrong size. Was #{data.size}, should be #{expected}"
+      raise XMLRPC::HTTPException, "Wrong size. Was #{data.size}, should be #{expected}"
     elsif expected != "<unknown>" and expected.to_i != data.size and resp["Transfer-Encoding"].nil?
-      raise "Wrong size. Was #{data.size}, should be #{expected}"
+      raise XMLRPC::HTTPException, "Wrong size. Was #{data.size}, should be #{expected}"
     end
 
     set_cookies = resp.get_fields("Set-Cookie")
