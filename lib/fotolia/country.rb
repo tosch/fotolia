@@ -1,4 +1,7 @@
 module Fotolia
+  #
+  # Represents one country at Fotolia.
+  #
   class Country
     attr_reader :id
     attr_reader :name

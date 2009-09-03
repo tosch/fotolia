@@ -1,7 +1,21 @@
 module Fotolia
+  # Error class raised if an unknwon symbol or id is given to Fotolia::Language#new.
   class LanguageNotDefinedError < StandardError; end
+
+  #
+  # Represents a language at Fotolia. An object of this class may be given to
+  # Fotolia::Base#new:
+  #
+  # <tt>language = Fotolia::Language.new :de</tt>
+  # <tt>fotolia = Fotolia.new :api_key => 'AAAAA...', :language => language</tt>
+  #
+  # Most API calls on the fotolia object will deliver translated results then.
+  #
   class Language
 
+    #
+    # Translate language code-like symbols to their ids at Fotolia.
+    #
     LANGUAGE_IDS = {
       :fr => 1,
       :en_us => 2,

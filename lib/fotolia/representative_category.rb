@@ -1,5 +1,12 @@
 module Fotolia
+  #
+  # Represents a representative category at Fotolia.
+  #
   class RepresentativeCategory < Category
+    #
+    # Returns an array of ConceptualCategory objects which are children of this
+    # category.
+    #
     def child_categories
       @fotolia.representative_categories.find(self)
     end

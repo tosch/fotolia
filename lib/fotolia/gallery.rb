@@ -1,8 +1,18 @@
 module Fotolia
+  #
+  # Represents a gallery at Fotolia.
+  #
   class Gallery
     attr_reader :name, :thumbnail_width, :thumbnail_html_tag, :id, :nb_media,
       :thumbnail_height, :thumbnail_url
 
+    #
+    # == Parameters
+    # fotolia_client:: A Fotolia::Base object.
+    # attributes:: An hash containing the keys 'name', 'id', 'nb_media' and
+    #              optional 'thumbnail_width', 'thumbnail_height',
+    #              'thumbnail_html_tag' and 'thumbnail_url'.
+    #
     def initialize(fotolia_client, attributes)
       @fotolia = fotolia_client
       

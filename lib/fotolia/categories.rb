@@ -1,9 +1,25 @@
 module Fotolia
+  #
+  # Base class for ConceptualCategories and RepresentativeCategories.
+  #
   class Categories
+    #
+    # == Parameters
+    # fotolia_client:: A Fotolia::Base object
+    #
     def initialize(fotolia_client)
       @fotolia = fotolia_client
     end
 
+    #
+    # Returns an array of Category objects. If no category is given, fetches
+    # the root level category. Otherwise the child categories of the given cat
+    # are returned.
+    #
+    # Raises a RuntimeError if not called on a ConceptualCategories or
+    # RepresentativeCategories object, i. e. <tt>@method</tt> and
+    # <tt>@klass</tt> has to be set.
+    #
     def find(category = nil)
       raise 'You have to use ConceptualCategories or RepresentativeCategories!' unless(@method && @klass)
 
@@ -27,6 +43,9 @@ module Fotolia
       end
     end
 
+    #
+    # Returns an array of all root level Category objects. See #find.
+    #
     def root_level
       self.find
     end

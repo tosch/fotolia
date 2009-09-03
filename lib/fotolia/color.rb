@@ -1,4 +1,7 @@
 module Fotolia
+  #
+  # Represents a color at Fotolia.
+  #
   class Color
     attr_reader :id
     attr_reader :name

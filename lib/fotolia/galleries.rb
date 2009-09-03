@@ -1,11 +1,16 @@
 module Fotolia
+  #
+  # Interface to galleries at Fotolia.
+  #
+  # Use Fotolia::Base#galleries as shortcut to an instance of this class.
+  #
   class Galleries
     def initialize(fotolia_client)
       @fotolia = fotolia_client
     end
 
     #
-    # Returns public galleries in an array.
+    # Returns public galleries in an array (of Fotolia::Gallery objects).
     #
     def find_all
       rsp = @fotolia.remote_call('getGalleries', @fotolia.language.id)

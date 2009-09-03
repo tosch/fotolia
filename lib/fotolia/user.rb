@@ -1,6 +1,6 @@
 module Fotolia
   #
-  # Represents an Fotolia user.
+  # Represents a Fotolia user.
   #
   # Won't yield sensible results in Partner API as the user methods are not
   # available there. Note that Reseller and Business API are limited to the user
@@ -166,17 +166,17 @@ module Fotolia
 
     protected
 
-    def user_data
+    def user_data #:nodoc:
       raise Fotolia::LoginRequiredError unless @fotolia.logged_in?
       @user_data ||= @fotolia.remote_call('getUserData', @fotolia.session_id)
     end
 
-    def user_stats
+    def user_stats #:nodoc:
       raise Fotolia::LoginRequiredError unless @fotolia.logged_in?
       @user_stats ||= @fotolia.remote_call('getUserStats', @fotolia.session_id)
     end
 
-    def advanced_user_stats(type, time_range = :year, date_period = nil)
+    def advanced_user_stats(type, time_range = :year, date_period = nil) #:nodoc:
       raise Fotolia::LoginRequiredError unless @fotolia.logged_in?
       raise ArgumentError, 'time_range has to be one of :day, :week, :month, :quarter or :year' unless([:day, :week, :month, :quarter, :year].include?(time_range))
 

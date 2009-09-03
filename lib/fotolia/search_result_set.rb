@@ -1,8 +1,34 @@
 module Fotolia
+  #
+  # Holds all media returned by each method relying on Fotolia::Base#search.
+  #
+  # Acts like an Array as all missing methods are passed to the instance
+  # variable @media which is an Array in fact.
+  #
+  # Fotolia::Base#search doesn't return an Array but a SearchResultSet insteaad,
+  # because Fotolia's API restricts the number of media returned per search
+  # query to a maximum of 64. The SearchResultSet allows you to easily fetch all
+  # media -- the results are parted in pages.
+  #
+  # You may access these pages by calling +pages+ on the SearchResultSet. The
+  # pages are held in an Fotolia::SearchResultSet::Pages object.
+  #
   class SearchResultSet
+
+    #
+    # Holds all pages for one search result. You may use all methods offered by
+    # Enumberable.
+    #
     class Pages
       include Enumerable
 
+      #
+      # == Parameters
+      # fotolia_client:: Fotolia::Base object
+      # options:: The options hash given to Base#search
+      # pages:: The total number of pages.
+      # result_set:: The SearchResultSet the call of Base#search returned.
+      #
       def initialize(fotolia_client, options, pages, result_set)
         @fotolia = fotolia_client
         @options = options
@@ -11,10 +37,20 @@ module Fotolia
         @result_sets[result_set.page - 1] = result_set
       end
 
+      #
+      # Access one page of a search result.
+      #
+      # Note that the numbering starts with 0.
+      #
+      # Return a SearchResultSet.
+      #
       def [] (n)
         @result_sets[n] ||= Fotolia::SearchResultSet.new(@fotolia, @options.merge({:page => (n + 1)}), self)
       end
 
+      #
+      # Yields the given block for every page.
+      #
       def each
         (0...@pages).each do |i|
           yield @result_sets[i] ||= Fotolia::SearchResultSet.new(@fotolia, @options.merge({:page => (i + 1)}), self)
@@ -22,6 +58,9 @@ module Fotolia
         self
       end
 
+      #
+      # Returns the number of pages.
+      #
       def length
         @pages
       end
@@ -30,8 +69,24 @@ module Fotolia
       
     end
 
-    attr_reader :page, :pages, :per_page, :total
+    # <Integer> The number of the current page.
+    attr_reader :page
+    # <Fotolia::SearchResultSet::Pages> The Pages object holding all pages for
+    # this search.
+    attr_reader :pages
+    # <Integer> The number of media per page.
+    attr_reader :per_page
+    # <Integer> The total number of found media for this search as returned by
+    #           Fotolia. You shouldn't rely on this value too badly, Fotolia
+    #           doesn't seem to be too correct about it...
+    attr_reader :total
 
+    #
+    # == Parameters
+    # fotolia_client:: A Fotolia::Base object
+    # options:: The options hash passed to Base#search
+    # pages_obj (optional):: Don't create a new Pages object, but use an existing one. Used internally for page caching.
+    #
     def initialize(fotolia_client, options, pages_obj = nil)
       @fotolia = fotolia_client
       @options = options
@@ -39,23 +94,29 @@ module Fotolia
       search
     end
 
+    #
+    # Returns the previous page for the current search or nil if any.
+    #
     def previous_page
       return nil unless(@media)
       self.pages[@page - 2] if(@page > 1)
     end
 
+    #
+    # Returns the next page for the current search or nil if any.
+    #
     def next_page
       return nil unless(@media)
       self.pages[@page + 2] if(@page < @total)
     end
 
-    def method_missing(method, *args, &block)
+    def method_missing(method, *args, &block) #:nodoc:
       @media.respond_to?(method) ? @media.send(method, *args, &block) : super
     end
 
     protected
 
-    def search
+    def search #:nodoc:
       #
       # Other arguments (besides language_id and api_key) accepted by Fotolia API:
       #
@@ -165,7 +226,7 @@ module Fotolia
       parse_results(@fotolia.remote_call('getSearchResults', remote_opts))
     end
 
-    def parse_results(api_response)
+    def parse_results(api_response) #:nodoc:
       @page = @options[:page]
       @per_page = @options[:per_page]
 

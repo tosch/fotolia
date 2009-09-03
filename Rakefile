@@ -7,11 +7,11 @@ require 'rake/testtask'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gemspec|
-    gemspec.name = "Fotolia"
+    gemspec.name = "fotolia"
     gemspec.summary = "Fotolia API Client"
     gemspec.description = "Provides a ruby interface to Fotolia via its XML-RPC api."
     gemspec.email = "torsten.schoenebaum@planquadrat-software.de"
-    gemspec.homepage = "http://github.com/tosch/Fotolia"
+    gemspec.homepage = "http://github.com/tosch/fotolia"
     gemspec.authors = ["Torsten Schönebaum"]
   end
 rescue LoadError

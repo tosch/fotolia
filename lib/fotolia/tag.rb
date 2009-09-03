@@ -1,4 +1,7 @@
 module Fotolia
+  #
+  # Represents a tag at Fotolia.
+  #
   class Tag
     attr_reader :name
     attr_reader :popularity
