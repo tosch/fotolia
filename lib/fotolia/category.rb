@@ -8,7 +8,7 @@ module Fotolia
     # <String> The category's name at Fotolia. Should be translated to the language the used Fotolia::Base object is set to.
     attr_reader :name
     # <Category> The parent of this category or nil if any.
-    atrr_reader :parent_category
+    attr_reader :parent_category
     # <String> Don't know what this attribute means, but Fotolia's API delivers it...
     attr_reader :key
 
