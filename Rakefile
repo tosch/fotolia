@@ -14,6 +14,7 @@ begin
     gemspec.homepage = "http://github.com/tosch/fotolia"
     gemspec.authors = ["Torsten Schönebaum"]
     gemspec.add_dependency('patron', '>= 0.4.4')
+    gemspec.rdoc_options << '--line-numbers' << '--main' << 'README.rdoc'
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

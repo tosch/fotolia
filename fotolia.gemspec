@@ -46,7 +46,7 @@ Gem::Specification.new do |s|
      "lib/fotolia/user.rb"
   ]
   s.homepage = %q{http://github.com/tosch/fotolia}
-  s.rdoc_options = ["--charset=UTF-8"]
+  s.rdoc_options = ["--charset=UTF-8", "--line-numbers", "--main", "README.rdoc"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{Fotolia API Client}
