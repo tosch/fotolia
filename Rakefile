@@ -21,9 +21,9 @@ rescue LoadError
 end
 
 Rake::RDocTask.new do |rdoc|
-  files =['README', 'LICENSE', 'lib/**/*.rb']
+  files =['README.rdoc', 'LICENSE', 'VERSION', 'lib/**/*.rb']
   rdoc.rdoc_files.add(files)
-  rdoc.main = "README" # page to start on
+  rdoc.main = "README.rdoc" # page to start on
   rdoc.title = "Fotolia Client"
   rdoc.rdoc_dir = 'doc/rdoc' # rdoc output folder
   rdoc.options << '--line-numbers'

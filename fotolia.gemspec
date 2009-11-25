@@ -14,12 +14,11 @@ Gem::Specification.new do |s|
   s.email = %q{torsten.schoenebaum@planquadrat-software.de}
   s.extra_rdoc_files = [
     "LICENSE",
-     "README"
+     "README.rdoc"
   ]
   s.files = [
     ".gitignore",
      "LICENSE",
-     "README",
      "Rakefile",
      "TODO",
      "VERSION",

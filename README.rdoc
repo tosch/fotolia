@@ -1,0 +1,76 @@
+= fotolia
+
+This is a client to the API of the royalty free stock image marketplace http://fotolia.com written in Ruby.
+
+You will need to register for an API key at Fotolia to use it: http://www.fotolia.com/Services/API/Introduction
+
+== Getting started
+  # install & configure gemcutter repos (skip if you already done this)
+  gem update --system
+  gem install gemcutter
+  gem tumble
+
+  # install gem
+  gem install fotolia
+
+== Usage
+  require 'fotolia'
+
+  # get client instance
+  fotolia = Fotolia.new(:api_key => 'YOUR_API_KEY')
+  # => #<Fotolia::Base ...>
+
+  # search for media
+  search_results = fotolia.search(:words => 'ruby')
+  # => #<Fotolia::SearchResultSet ...>
+
+  search_results.total # number of results
+  # => 3978
+
+  # Take care, the result sets are paged!
+  search_results.length
+  # => 50
+
+  # You may access the pages in various ways:
+  search_results.next_page    # get the next page of the current one
+  search_results.pages.length # get the total number of pages
+  search_results.pages[3]     # Fotolia::SearchResultSet::Pages includes the
+                              # Enumerable mixin!
+
+  # inspect a medium object
+  search_results.first
+  # => #<Fotolia::Medium ...>
+
+  search_results.first.id             # get its id
+  # => 18432121
+  search_results.first.title          # get its title
+  # => "Crowns"
+  search_results.first.licenses.collect{|l| {l.name => l.price}} # there are different licenses available at Fotolia
+  # => [{"XS"=>1}, {"S"=>2}, {"M"=>4}, {"L"=>5}, {"XL"=>6}, {"XXL"=>7}, {"V"=>6}, {"XV"=>80}]
+  search_results.first.creator_name   # who published that image?
+  # => "antipathique"
+  search_results.first.thumbnail.url  # get a thumbnail url
+  # => "http://static-p4.fotolia.com/jpg/....jpg"
+
+  # some basic fun with categories
+  categories = fotolia.representative_categories.root_level
+  # => [#<Fotolia::RepresentativeCategory..., ...]
+  {categories.first.id => categories.first.name}
+  # => {6000000=>"Transportation"}
+  categories.first.child_categories   # there are three category levels, this
+                                      # gets the second one for the first
+                                      # category in our previously fetched array
+  # => [#<Fotolia::RepresentativeCategory..., ...]
+  categories.first.child_categories[2].child_categories # the third level
+  # => [#<Fotolia::RepresentativeCategory..., ...]
+  categories.first.child_categories[2].child_categories.first.media # get media in a category
+  # => #<Fotolia::SearchResultSet ...>
+
+...
+
+== Author
+Planquadrat Software-Integration GmbH <http://www.planquadrat-software.de>
+Torsten Schönebaum <http://github.com/tosch>
+
+== License
+See LICENSE
