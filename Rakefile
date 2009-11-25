@@ -13,7 +13,9 @@ begin
     gemspec.email = "torsten.schoenebaum@planquadrat-software.de"
     gemspec.homepage = "http://github.com/tosch/fotolia"
     gemspec.authors = ["Torsten Schönebaum"]
+    gemspec.add_dependency('patron', '>= 0.4.4')
   end
+  Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
