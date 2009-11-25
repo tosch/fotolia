@@ -116,7 +116,7 @@ module Fotolia
     # each time you call a method which requires interaction with the API) and
     # some attributes as parameters.
     #
-    # <tt>Fotolia::Medium.new Fotolia.new(:api_key => 'AAA...'), :id => 12345678</tt>
+    #   Fotolia::Medium.new Fotolia.new(:api_key => 'AAA...'), :id => 12345678
     #
     # should be enough to get a valid object -- missing values will be collected
     # from the API automatically (with an default size of 400px for the

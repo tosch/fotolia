@@ -6,8 +6,8 @@ module Fotolia
   # Represents a language at Fotolia. An object of this class may be given to
   # Fotolia::Base#new:
   #
-  # <tt>language = Fotolia::Language.new :de</tt>
-  # <tt>fotolia = Fotolia.new :api_key => 'AAAAA...', :language => language</tt>
+  #   language = Fotolia::Language.new :de
+  #   fotolia = Fotolia.new :api_key => 'AAAAA...', :language => language
   #
   # Most API calls on the fotolia object will deliver translated results then.
   #

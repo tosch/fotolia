@@ -131,8 +131,8 @@ module Fotolia
     # Returns a Fotolia::Colors object.
     #
     # ==Example
-    # f = Fotolia.new(:api_key => YOUR_API_KEY)
-    # f.colors.find_all
+    #   f = Fotolia.new(:api_key => YOUR_API_KEY)
+    #   f.colors.find_all
     #
     def colors
       @colors ||= Fotolia::Colors.new(self)
@@ -142,8 +142,8 @@ module Fotolia
     # Returns a Fotolia::ConceptualCategories object.
     #
     # ==Example
-    # f = Fotolia.new(:api_key => YOUR_API_KEY)
-    # f.conceptual_categories.find
+    #   f = Fotolia.new(:api_key => YOUR_API_KEY)
+    #   f.conceptual_categories.find
     #
     def conceptual_categories
       @conceptual_categories ||= Fotolia::ConceptualCategories.new(self)
@@ -153,8 +153,8 @@ module Fotolia
     # Returns a Fotolia::RepresentativeCategories object.
     #
     # ==Example
-    # f = Fotolia.new(:api_key => YOUR_API_KEY)
-    # f.representative_categories.find
+    #   f = Fotolia.new(:api_key => YOUR_API_KEY)
+    #   f.representative_categories.find
     #
     def representative_categories
       @representative_categories ||= Fotolia::RepresentativeCategories.new(self)
@@ -164,8 +164,8 @@ module Fotolia
     # Returns a Fotolia::Countries object.
     #
     # ==Example
-    # f = Fotolia.new(:api_key => YOUR_API_KEY)
-    # f.countries.find_all
+    #   f = Fotolia.new(:api_key => YOUR_API_KEY)
+    #   f.countries.find_all
     #
     def countries
       @countries ||= Fotolia::Countries.new(self)
@@ -175,8 +175,8 @@ module Fotolia
     # Returns a Fotolia::Galleries object.
     #
     # ==Example
-    # f = Fotolia.new(:api_key => YOUR_API_KEY)
-    # f.galleries.find_all
+    #   f = Fotolia.new(:api_key => YOUR_API_KEY)
+    #   f.galleries.find_all
     #
     def galleries
       @galleries ||= Fotolia::Galleries.new(self)
@@ -186,9 +186,9 @@ module Fotolia
     # Returns a Fotolia::Tags object.
     #
     # ==Example
-    # f = Fotolia.new(:api_key => YOUR_API_KEY)
-    # f.tags.most_used
-    # f.tags.most_searched
+    #   f = Fotolia.new(:api_key => YOUR_API_KEY)
+    #   f.tags.most_used
+    #   f.tags.most_searched
     #
     def tags
       @tags ||= Fotolia::Tags.new(self)

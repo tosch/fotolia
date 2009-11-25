@@ -42,7 +42,7 @@ module Fotolia
       #
       # Note that the numbering starts with 0.
       #
-      # Return a SearchResultSet.
+      # Returns a SearchResultSet.
       #
       def [] (n)
         @result_sets[n] ||= Fotolia::SearchResultSet.new(@fotolia, @options.merge({:page => (n + 1)}), self)
